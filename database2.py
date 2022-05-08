@@ -25,8 +25,8 @@ rowssource = []
 rowrating = []
 
 for i in range(0,len(obj["dataFeedElement"])):
-#for i in range(0,300):
-	x = str(i)+" "+ "of " + str(len(obj["dataFeedElement"])) + "done"
+#for i in range(0,100):
+	x = str(i)+" "+ "of " + str(len(obj["dataFeedElement"])) + " done."
 	if obj["dataFeedElement"][i]["item"] is not None:
 		for j in range(0, len(obj["dataFeedElement"][i]["item"])):
 			##DatePublished
@@ -78,7 +78,11 @@ df_temp_3 = df_temp_3.reset_index(drop=True)
 df_temp_3 = df_temp_3.drop_duplicates()
 
 
-print(df_temp_3.head())
+df_temp_3['translated_claim'] = df_temp_3['claim'].apply(lambda x: translator.translate(x, dest='en').text)
+df_temp_3['translated_reviewrating'] = df_temp_3['reviewrating'].apply(lambda x: translator.translate(x, dest='en').text)
+
+#print(df_temp_3.head())
+
 
 df_temp_3.to_csv("/mnt/c/Users/vatsa/Desktop/Projects/Outputs/Misinfo/database_translated.csv",sep='\t',encoding='utf-8',index=False)
 #print(os.getcwd())
