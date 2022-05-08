@@ -1,28 +1,31 @@
 #importing stuffsss
+from pickle import FALSE
 import pandas as pd
 import json
 import os
 import gc
+from googletrans import Translator 
 
-df = pd.read_json('factcheck.json')
 
-with open('factcheck.json','r') as myfile:
+translator = Translator()
+df = pd.read_json('/mnt/c/Users/vatsa/Desktop/Projects/misinfoproject/factcheck.json')
+
+with open('/mnt/c/Users/vatsa/Desktop/Projects/misinfoproject/factcheck.json','r') as myfile:
     data=myfile.read()
 
 obj = json.loads(data)
-column_names = ["index","datepublished"]
-column_namesclaim = ["index","claim"]
-column_namessource = ["index","source","source_type"]
-column_namesrating = ["index","reviewratingtype","reviewrating"]
-#column_fact = ["index","factcheck source","factcheck_aggregator_url"]
+column_names = ["num","datepublished"]
+column_namesclaim = ["num","claim"]
+column_namessource = ["num","source","source_type"]
+column_namesrating = ["num","reviewratingtype","reviewrating"]
 
 rows = []
 rowsclaim = []
 rowssource = []
 rowrating = []
-#rowfactcheck = []
-for i in range(0,len(obj["dataFeedElement"])):
-#for i in range(0,30000):
+
+#for i in range(0,len(obj["dataFeedElement"])):
+for i in range(0,300):
 	x = str(i)+" "+ "of " + str(len(obj["dataFeedElement"])) + "done"
 	if obj["dataFeedElement"][i]["item"] is not None:
 		for j in range(0, len(obj["dataFeedElement"][i]["item"])):
@@ -60,11 +63,6 @@ for i in range(0,len(obj["dataFeedElement"])):
 			
 			rowrating.append(row)
 			
-#			if "sdPublisher" in obj["dataFeedElement"][i]["item"][j]:
-#				row = [str(i),obj["dataFeedElement"][i]["item"][j]["url"],obj["dataFeedElement"][i]["item"][j]["sdPublisher"]["url"]]
-#			else:
-#				row = [str(i),"NA","NA"]
-#			rowfactcheck.append(row)
 	print(x)
 	del x
 
@@ -72,13 +70,15 @@ df = pd.DataFrame(rows,columns = column_names)
 df2 = pd.DataFrame(rowsclaim,columns = column_namesclaim)
 df3 = pd.DataFrame(rowssource,columns = column_namessource)
 df4 = pd.DataFrame(rowrating,columns = column_namesrating)
-#df5 = pd.DataFrame(rowfactcheck,columns = column_fact)
 
-df_temp_1 = pd.merge(df,df2,how="left", on = ["index"])
-df_temp_2 = pd.merge(df_temp_1,df3,how="left", on = ["index"])
-df_temp_3 = pd.merge(df_temp_2,df4,how="left", on = ["index"])
-#df_temp_4 = pd.merge(df_temp_3,df5,how="left", on = ["index"])
+df_temp_1 = pd.merge(df,df2,how="left", on = ["num"])
+df_temp_2 = pd.merge(df_temp_1,df3,how="left", on = ["num"])
+df_temp_3 = pd.merge(df_temp_2,df4,how="left", on = ["num"])
+df_temp_3 = df_temp_3.reset_index(drop=True)
+df_temp_3 = df_temp_3.drop_duplicates()
 
-#print(df_temp_4)
-df_temp_3.to_csv("database.csv",sep='\t',encoding='utf-8')
-print(os.getcwd())
+
+print(df_temp_3.head())
+
+#df_temp_3.to_csv("/mnt/c/Users/vatsa/Desktop/Projects/misinfoproject/database_translated.csv",sep='\t',encoding='utf-8',index=False)
+#print(os.getcwd())
