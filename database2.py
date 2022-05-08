@@ -24,8 +24,8 @@ rowsclaim = []
 rowssource = []
 rowrating = []
 
-#for i in range(0,len(obj["dataFeedElement"])):
-for i in range(0,300):
+for i in range(0,len(obj["dataFeedElement"])):
+#for i in range(0,300):
 	x = str(i)+" "+ "of " + str(len(obj["dataFeedElement"])) + "done"
 	if obj["dataFeedElement"][i]["item"] is not None:
 		for j in range(0, len(obj["dataFeedElement"][i]["item"])):
@@ -80,5 +80,5 @@ df_temp_3 = df_temp_3.drop_duplicates()
 
 print(df_temp_3.head())
 
-#df_temp_3.to_csv("/mnt/c/Users/vatsa/Desktop/Projects/misinfoproject/database_translated.csv",sep='\t',encoding='utf-8',index=False)
+df_temp_3.to_csv("/mnt/c/Users/vatsa/Desktop/Projects/Outputs/Misinfo/database_translated.csv",sep='\t',encoding='utf-8',index=False)
 #print(os.getcwd())
